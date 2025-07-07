@@ -1,3 +1,8 @@
 {
-
+  "god-machine.api-key-title": "API Key",
+  "god-machine.api-key-hint": "Enter the API Key for your AI provider here.",
+  "god-machine.model-title": "Model",
+  "god-machine.model-hint": "Select the AI model you want to use for character generation.",
+  "god-machine.endpoint-title": "Endpoint",
+  "god-machine.endpoint-hint": "Enter the endpoint URL for your AI provider."
 }
