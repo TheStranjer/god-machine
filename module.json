@@ -1,0 +1,22 @@
+{
+  "id": "god-machine",
+  "title": "God Machine",
+  "description": "LLM character generation for Chronicles of Darkness",
+  "version": "1.0.0",
+  "author": "TheStranjer",
+  "compatibility": {
+    "minimum": "12",
+    "maximum": "12",
+    "verified": "12"
+  },
+  "esmodules": ["/module/god-machine.js"],
+  "styles": ["/module/god-machine.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "/module/lang/en.json"
+    }
+  ],
+  "systems": "mta"
+}
