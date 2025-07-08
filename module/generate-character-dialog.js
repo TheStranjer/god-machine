@@ -4,7 +4,7 @@ export class GenerateCharacterDialog extends Dialog {
       id: "generate-character-dialog",
       classes: ["mta", "generate-character"],
       title: "Generate Character",
-      width: 1080
+      width: 500
     }};
   }
 
