@@ -9,16 +9,6 @@ Hooks.once("init", () => {
   console.log("God-machine settings have been registered.");
 });
 
-Hooks.once("ready", () => {
-  const btn = $('<button class="god-machine-button"><i class="fas fa-robot"></i> Generate Character</button>');
-  btn.on("click", () => {
-    console.log("Generate Character button clicked");
-  });
-
-  $('#actors-directory').prepend(btn);
-  console.log("God-machine module is ready...");
-});
-
 Hooks.on("getActorDirectoryEntryContext", (html, options) => {
   options.push({
     name: "Generate Character",
