@@ -1,4 +1,4 @@
-export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = []) => {
+export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = [], reasoning_effort=null) => {
   const API_URL   = game.settings.get("god-machine", "endpoint");
   const API_TOKEN = game.settings.get("god-machine", "apiKey");
   const API_MODEL = game.settings.get("god-machine", "model");
@@ -16,18 +16,20 @@ export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = []) => {
       {
         role: "system",
         content:
-          "You are a character generation agent for Chronicles of Darkness. " +
-          "The character sheet's current state is provided as a JSON string in the `developer` " +
+          "You are a highly intelligent AI assistant. " +
+          "You are also a character generation agent for Chronicles of Darkness. " +
+          "The character sheet's current state is provided as a JSON string in the first `user` " +
           "message as context. Use the information therein to help make the most logical choices."
       },
-      { role: "developer", content: JSON.stringify(sheet) },
-      { role: "user",      content: prompt }
+      { role: "user", content: JSON.stringify(sheet) },
+      { role: "user", content: prompt }
     ].concat(appendage);
 
   const body = JSON.stringify({
     model: API_MODEL,
     messages: messages,
-    ...(tool ? { tools: [tool], tool_choice: "required" } : {})
+    ...(tool ? { tools: [tool], tool_choice: "required" } : {}),
+    ...(reasoning_effort ? { reasoning_effort: reasoning_effort, temperature: 0.7 } : {})
   });
 
   const res = await fetch(API_URL, { method: "POST", headers, body });

@@ -148,7 +148,8 @@ static async _onGenerate (actor, html) {
         step.prompt(actor),
         actorToCharacterSheet(actor),
         step.tool(actor),
-        appendage
+        appendage,
+        step?.reasoning_effort?.(actor)
       );
 
       if (response.error) {
@@ -160,6 +161,11 @@ static async _onGenerate (actor, html) {
       }
 
       const args = response?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+      appendage.push({
+        role: "assistant",
+        content: `Attempt ${attempts} of ${maximumAttempts}: ${args || "No content returned."}`
+      });
+
       if (!args) {
         appendage.push({
           role: "assistant",
@@ -172,7 +178,7 @@ static async _onGenerate (actor, html) {
       const validationErrors = step.validate(actor, data);
       if (validationErrors.length > 0) {
         appendage.push({
-          role: "assistant",
+          role: "user",
           content: `Validation errors (try again): ${validationErrors.join(", ")}`
         });
         continue;
@@ -187,6 +193,13 @@ static async _onGenerate (actor, html) {
       ui.notifications.info(`Successfully generated ${stepName} for ${actor.name} after ${attempts} attempt(s).`);
     } else {
       ui.notifications.error(`Failed to generate ${stepName} for ${actor.name} after ${maximumAttempts} attempts.`);
+      console.error(`Failed to generate ${stepName} for ${actor.name} after ${maximumAttempts} attempts.`, {
+        actor,
+        stepName,
+        attempts,
+        maximumAttempts,
+        appendage
+      });
     }
   }
 }
