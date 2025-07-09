@@ -128,15 +128,18 @@ Rules:
     const updateData = {};
     
     Object.entries(mMap).forEach(([name, key]) => {
-      updateData[`system.skills_mental.${key}`] = data[name];
+      const newSkill = { ...actor.system.skills_mental[key], ...{ value: data[name], final: data[name] } };
+      updateData[`system.skills_mental.${key}`] = newSkill;
     });
     
     Object.entries(pMap).forEach(([name, key]) => {
-      updateData[`system.skills_physical.${key}`] = data[name];
+      const newSkill = { ...actor.system.skills_physical[key], ...{ value: data[name], final: data[name] } };
+      updateData[`system.skills_physical.${key}`] = newSkill;
     });
     
     Object.entries(sMap).forEach(([name, key]) => {
-      updateData[`system.skills_social.${key}`] = data[name];
+      const newSkill = { ...actor.system.skills_social[key], ...{ value: data[name], final: data[name] } };
+      updateData[`system.skills_social.${key}`] = newSkill;
     });
 
     await actor.update(updateData);
@@ -147,9 +150,9 @@ Rules:
     const physicalKeys = ["athletics", "brawl", "drive", "firearms", "larceny", "stealth", "survival", "weaponry"];
     const socialKeys = ["animalKen", "empathy", "expression", "intimidation", "persuasion", "socialize", "streetwise", "subterfuge"];
 
-    const checkMental = mentalKeys.every(k => (typeof actor.system.skills_mental?.[k] == "object"));
-    const checkPhysical = physicalKeys.every(k => (typeof actor.system.skills_physical?.[k] == "object"));
-    const checkSocial = socialKeys.every(k => (typeof actor.system.skills_social?.[k] == "object"));
+    const checkMental = mentalKeys.every(k => (actor.system.skills_mental?.[k]?.value == 0));
+    const checkPhysical = physicalKeys.every(k => (actor.system.skills_physical?.[k]?.value == 0));
+    const checkSocial = socialKeys.every(k => (actor.system.skills_social?.[k]?.value == 0));
 
     return checkMental && checkPhysical && checkSocial;
   }

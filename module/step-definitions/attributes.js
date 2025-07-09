@@ -134,15 +134,18 @@ export const attributesStep = {
     const updateData = {};
     
     Object.entries(physicalMap).forEach(([attr, key]) => {
-      updateData[`system.attributes_physical.${key}`] = data[attr];
+      const newAttribute = { ...actor.system.attributes_physical[attr], ...{ value: data[attr], final: data[attr] } };
+      updateData[`system.attributes_physical.${key}`] = newAttribute;
     });
     
     Object.entries(mentalMap).forEach(([attr, key]) => {
-      updateData[`system.attributes_mental.${key}`] = data[attr];
+      const newAttribute = { ...actor.system.attributes_mental[attr], ...{ value: data[attr], final: data[attr] } };
+      updateData[`system.attributes_mental.${key}`] = newAttribute;
     });
     
     Object.entries(socialMap).forEach(([attr, key]) => {
-      updateData[`system.attributes_social.${key}`] = data[attr];
+      const newAttribute = { ...actor.system.attributes_social[attr], ...{ value: data[attr], final: data[attr] } };
+      updateData[`system.attributes_social.${key}`] = newAttribute;
     });
 
     await actor.update(updateData);
@@ -152,8 +155,8 @@ export const attributesStep = {
     const physicalKeys = ["strength", "dexterity", "stamina"];
     const mentalKeys = ["intelligence", "wits", "resolve"];
     const socialKeys = ["presence", "manipulation", "composure"];
-    return physicalKeys.every(k => (typeof actor.system.attributes_physical?.[k] == "object") &&
-         mentalKeys.every(k => (typeof actor.system.attributes_mental?.[k] == "object")) &&
-         socialKeys.every(k => (typeof actor.system.attributes_social?.[k] == "object")));
+    return physicalKeys.every(k => (actor.system.attributes_physical?.[k]?.value == 1) &&
+         mentalKeys.every(k => (actor.system.attributes_mental?.[k]?.value == 1)) &&
+         socialKeys.every(k => (actor.system.attributes_social?.[k]?.value == 1)));
   }
 };
