@@ -26,6 +26,7 @@ export class GenerateCharacterApp extends FormApplication {
   getData() {
     const actor = this.actor;
     const ctx = {
+      characterName: actor?.name || "New Character",
       baseSections: this._buildBaseSections(actor),
       splatSections: this._buildSplatSections(actor),
       splatLabel: actor?.system?.characterType || "Mortal",
