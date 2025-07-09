@@ -149,7 +149,11 @@ export const attributesStep = {
   },
 
   defaultChecked: (actor) => {
-    const keys = ["strength", "dexterity", "stamina", "intelligence", "wits", "resolve", "presence", "manipulation", "composure"];
-    return keys.every(k => ((actor.system.attributes?.[k] ?? 1) <= 1));
+    const physicalKeys = ["strength", "dexterity", "stamina"];
+    const mentalKeys = ["intelligence", "wits", "resolve"];
+    const socialKeys = ["presence", "manipulation", "composure"];
+    return physicalKeys.every(k => (typeof actor.system.attributes_physical?.[k] == "object") &&
+         mentalKeys.every(k => (typeof actor.system.attributes_mental?.[k] == "object")) &&
+         socialKeys.every(k => (typeof actor.system.attributes_social?.[k] == "object")));
   }
 };

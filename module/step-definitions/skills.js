@@ -143,7 +143,14 @@ Rules:
   },
 
   defaultChecked: (actor) => {
-    const keys=["academics","computer","crafts","investigation","medicine","occult","politics","science","athletics","brawl","drive","firearms","larceny","stealth","survival","weaponry","animalKen","empathy","expression","intimidation","persuasion","socialize","streetwise","subterfuge"];
-    return keys.every(k => ((actor.system.skills?.[k] ?? 0) <= 0));
+    const mentalKeys = ["academics", "computer", "crafts", "investigation", "medicine", "occult", "politics", "science"];
+    const physicalKeys = ["athletics", "brawl", "drive", "firearms", "larceny", "stealth", "survival", "weaponry"];
+    const socialKeys = ["animalKen", "empathy", "expression", "intimidation", "persuasion", "socialize", "streetwise", "subterfuge"];
+
+    const checkMental = mentalKeys.every(k => (typeof actor.system.skills_mental?.[k] == "object"));
+    const checkPhysical = physicalKeys.every(k => (typeof actor.system.skills_physical?.[k] == "object"));
+    const checkSocial = socialKeys.every(k => (typeof actor.system.skills_social?.[k] == "object"));
+
+    return checkMental && checkPhysical && checkSocial;
   }
 };
