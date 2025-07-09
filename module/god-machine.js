@@ -1,5 +1,5 @@
 import { registerSystemSettings } from "./settings.js";
-import { GenerateCharacterDialog } from "./generate-character-dialog.js";
+import { GenerateCharacterApp } from "./generate-character-app.js";
 
 console.log("Loading god-machine module...");
 
@@ -23,7 +23,7 @@ Hooks.on("getActorDirectoryEntryContext", (html, options) => {
       const actor = game.actors.get(actorId);
       if (!actor) return;
 
-      new GenerateCharacterDialog(actor).render(true);
+      new GenerateCharacterApp(actor).render(true);
     }
   });
 });

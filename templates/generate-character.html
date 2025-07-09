@@ -1,0 +1,40 @@
+<form>
+  <div class="form-group">
+    <table class="god-machine-generate-character-table">
+      <tr>
+        <td class="god-machine-generate-character-table-col">
+          <h2>Base Sections</h2>
+          {{#each baseSections}}
+            <div class="row step-row" data-step="{{id}}">
+              <div class="col">
+                <label class="checkbox">
+                  <input type="checkbox" name="{{id}}-step" {{#if checked}}checked{{/if}}>
+                  <span class="step-label">{{label}}</span>
+                </label>
+              </div>
+            </div>
+          {{/each}}
+        </td>
+        {{#if hasSplat}}
+          <td class="god-machine-generate-character-table-col">
+            <h2>{{splatLabel}}</h2>
+            {{#each splatSections}}
+              <div class="row step-row" data-step="{{id}}">
+                <div class="col">
+                  <label class="checkbox">
+                    <input type="checkbox" name="{{id}}" {{#if checked}}checked{{/if}}>
+                    <span class="step-label">{{label}}</span>
+                  </label>
+                </div>
+              </div>
+            {{/each}}
+          </td>
+        {{/if}}
+      </tr>
+    </table>
+  </div>
+
+  <footer class="form-footer">
+    <button type="submit" class="generate-btn"><i class="fas fa-robot"></i> Generate</button>
+  </footer>
+</form>
