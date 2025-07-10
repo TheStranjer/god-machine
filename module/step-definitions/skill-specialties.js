@@ -134,9 +134,10 @@ export const skillSpecialtiesStep = {
   },
 
   defaultChecked: (actor) => {
-    let count=0;
-    ["skills_mental", "skills_physical", "skills_social"].every(cat => {
-      Object.keys(actor.system[cat] || {}).every(skill => actor.system[cat][skill].specialties?.length == 0);
+    return ["skills_mental", "skills_physical", "skills_social"].every(cat => {
+      return Object.keys(actor.system[cat] || {}).every(skill => {
+        return actor.system[cat][skill].specialties?.length == 0;
+      });
     });
   }
 };
