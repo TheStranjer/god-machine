@@ -3,7 +3,11 @@
   "title": "God Machine",
   "description": "LLM character generation for Chronicles of Darkness",
   "version": "1.0.0",
-  "author": "TheStranjer",
+  "authors": [
+    {
+      "name": "TheStranjer"
+    }
+  ],
   "compatibility": {
     "minimum": "12",
     "maximum": "12",
@@ -18,5 +22,15 @@
       "path": "/module/lang/en.json"
     }
   ],
-  "systems": "mta"
+  "relationships": {
+    "systems": [{
+      "id": "mta",
+      "type": "system"
+    }],
+    "requires": [{
+      "id": "_mathjs",
+      "type": "module",
+      "manifest": "https://raw.githubusercontent.com/League-of-Foundry-Developers/mathjs-lib/master/module.json"
+    }]
+  }
 }
