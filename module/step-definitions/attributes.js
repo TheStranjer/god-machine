@@ -48,8 +48,6 @@ export const attributesStep = {
 - No attribute can exceed 5 dots total.
 - All nine attributes must have at least 1 dot (due to the starting dot).` ),
 
-  reasoning_effort: (actor) => "high",
-
   tool: (actor) => {
     const categories = ["Physical", "Mental", "Social"];
     const attrs = ["Strength", "Dexterity", "Stamina", "Intelligence", "Wits", "Resolve", "Presence", "Manipulation", "Composure"];

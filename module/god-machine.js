@@ -27,3 +27,27 @@ Hooks.on("getActorDirectoryEntryContext", (html, options) => {
     }
   });
 });
+
+Hooks.on("renderItemSheet", (sheet, html, data) => {
+  if (data.item.type !== "merit" || game.system.id !== "mta") {
+    return;
+  }
+
+  const prerequisitesField = `
+    <div class="form-group">
+      <label>Prerequisites</label>
+      <input type="text" name="system.prerequisites" value="${data.system.prerequisites || ''}">
+    </div>
+    <div class="form-group">
+      <label>Possible Ratings</label>
+      <input type="text" name="system.possibleRatings" value="${data.system.possibleRatings || ''}">
+    </div>
+  `;
+
+  const injectionPoint = html.find(".form-group").last();
+  if (injectionPoint.length) {
+    injectionPoint.after(prerequisitesField);
+  } else {
+    html.find(".sheet-body").append(prerequisitesField);
+  }
+});

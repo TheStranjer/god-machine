@@ -138,8 +138,7 @@ export class GenerateCharacterApp extends FormApplication {
           step.prompt(this.actor),
           actorToCharacterSheet(this.actor),
           step.tool(this.actor),
-          appendage,
-          step?.reasoning_effort?.(this.actor)
+          appendage
         );
 
         if (response.error) {

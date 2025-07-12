@@ -1,4 +1,4 @@
-export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = [], reasoning_effort=null) => {
+export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = []) => {
   const API_URL   = game.settings.get("god-machine", "endpoint");
   const API_TOKEN = game.settings.get("god-machine", "apiKey");
   const API_MODEL = game.settings.get("god-machine", "model");
@@ -28,8 +28,7 @@ export const hitLLMEndpoint = async (prompt, sheet, tool, appendage = [], reason
   const body = JSON.stringify({
     model: API_MODEL,
     messages: messages,
-    ...(tool ? { tools: [tool], tool_choice: "required" } : {}),
-    ...(reasoning_effort ? { reasoning_effort: reasoning_effort, temperature: 0.7 } : {})
+    ...(tool ? { tools: [tool], tool_choice: "required" } : {})
   });
 
   const res = await fetch(API_URL, { method: "POST", headers, body });

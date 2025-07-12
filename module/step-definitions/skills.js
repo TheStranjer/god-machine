@@ -20,8 +20,6 @@ Rules:
 • Totals per category must be 11, 7, 4 respectively.  
 • No skill may exceed 5.` ),
 
-  reasoning_effort: (actor) => "high",
-
   tool: (actor) => {
     const categories = ["Physical", "Mental", "Social"];
     const skills = [
