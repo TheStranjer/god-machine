@@ -17,7 +17,7 @@ const maximumAge = (actor) => actor.system.characterType === "Vampire" ? 1_000 :
 const demographicList = (actor) => {
   const list = ["name", "age", "sex", "aspirations", "notes", "description"];
 
-  if (hasVirtueAndVice) {
+  if (hasVirtueAndVice(actor)) {
     list.push("virtue", "vice");
   }
 
@@ -61,7 +61,7 @@ export const demographicsStep = {
       }
     };
 
-    if (hasVirtueAndVice) {
+    if (hasVirtueAndVice(actor)) {
       props.virtue = {
         type: "string",
         description: "Morality Virtue"
@@ -127,7 +127,7 @@ export const demographicsStep = {
       }
     });
 
-    if (hasVirtueAndVice) {
+    if (hasVirtueAndVice(actor)) {
       ["virtue", "vice"].forEach((k) => {
         if (typeof data[k] !== "string" || !data[k].trim()) {
           errors.push(`${k} must be a non-empty string`);
@@ -148,7 +148,7 @@ export const demographicsStep = {
       "system.description": data.description
     };
 
-    if (hasVirtueAndVice) {
+    if (hasVirtueAndVice(actor)) {
       updateData["system.virtue"] = data.virtue;
       updateData["system.vice"] = data.vice;
     }

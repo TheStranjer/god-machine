@@ -50,29 +50,30 @@ export class GenerateCharacterApp extends FormApplication {
     const splat = actor?.system?.characterType || "";
     switch (splat) {
       case "Werewolf": return [
-        { id: "renown",            label: "Renown",             checked: steps.renown?.defaultChecked?.(actor)              ?? true },
-        { id: "blood_and_bone",    label: "Blood & Bone",       checked: steps.blood_and_bone?.defaultChecked?.(actor)      ?? true },
-        { id: "uratha_touchstones",label: "Touchstones",        checked: steps.uratha_touchstones?.defaultChecked?.(actor)  ?? true },
-        { id: "gifts",             label: "Gifts",              checked: steps.gifts?.defaultChecked?.(actor)               ?? true },
-        { id: "rites",             label: "Rites",              checked: steps.rites?.defaultChecked?.(actor)               ?? true }
+        { id: "auspiceAndTribe",   label: "Auspice & Tribe",    checked: steps.auspiceAndTribe?.defaultChecked?.(actor)   ?? true },
+        { id: "renown",            label: "Renown",             checked: steps.renown?.defaultChecked?.(actor)            ?? true },
+        { id: "bloodAndBone",      label: "Blood & Bone",       checked: steps.bloodAndBone?.defaultChecked?.(actor)      ?? true },
+        { id: "urathaTouchstones", label: "Touchstones",        checked: steps.urathaTouchstones?.defaultChecked?.(actor) ?? true },
+        { id: "gifts",             label: "Gifts",              checked: steps.gifts?.defaultChecked?.(actor)             ?? true },
+        { id: "rites",             label: "Rites",              checked: steps.rites?.defaultChecked?.(actor)             ?? true }
       ];
       case "Vampire": return [
-        { id: "masks_and_dirges",  label: "Masks & Dirges",     checked: steps.masks_and_dirges?.defaultChecked?.(actor)    ?? true },
-        { id: "kindred_touchstone",label: "Touchstone",         checked: steps.kindred_touchstone?.defaultChecked?.(actor)  ?? true },
+        { id: "masks_and_dirges",  label: "Masks & Dirges",     checked: steps.masksAndDirges?.defaultChecked?.(actor)    ?? true },
+        { id: "kindred_touchstone",label: "Touchstone",         checked: steps.kindredTouchstone?.defaultChecked?.(actor)  ?? true },
         { id: "disciplines",       label: "Disciplines",        checked: steps.disciplines?.defaultChecked?.(actor)         ?? true }
       ];
       case "Mage": return [
         { id: "nimbus",            label: "Nimbus",             checked: steps.nimbus?.defaultChecked?.(actor)              ?? true },
-        { id: "dedicated_magical_tool", label: "Dedicated Magical Tool", checked: steps.dedicated_magical_tool?.defaultChecked?.(actor) ?? true },
+        { id: "dedicated_magical_tool", label: "Dedicated Magical Tool", checked: steps.dedicatedMagicalTool?.defaultChecked?.(actor) ?? true },
         { id: "arcana",            label: "Arcana",             checked: steps.arcana?.defaultChecked?.(actor)              ?? true },
         { id: "rotes",             label: "Rotes",              checked: steps.rotes?.defaultChecked?.(actor)               ?? true },
         { id: "obsessions",        label: "Obsessions",         checked: steps.obsessions?.defaultChecked?.(actor)          ?? true },
         { id: "praxes",            label: "Praxes",             checked: steps.praxes?.defaultChecked?.(actor)              ?? true },
-        { id: "resistance_attribute", label: "Resistance Attribute", checked: steps.resistance_attribute?.defaultChecked?.(actor) ?? true }
+        { id: "resistance_attribute", label: "Resistance Attribute", checked: steps.resistanceAttribute?.defaultChecked?.(actor) ?? true }
       ];
       case "Changeling": return [
         { id: "mien",              label: "Mien",               checked: steps.mien?.defaultChecked?.(actor)                ?? true },
-        { id: "needle_and_thread", label: "Needle & Thread",    checked: steps.needle_and_thread?.defaultChecked?.(actor)   ?? true },
+        { id: "needle_and_thread", label: "Needle & Thread",    checked: steps.needleAndThread?.defaultChecked?.(actor)   ?? true },
         { id: "touchstone",        label: "Touchstone",         checked: steps.touchstone?.defaultChecked?.(actor)          ?? true },
         { id: "contracts",         label: "Contracts",          checked: steps.contracts?.defaultChecked?.(actor)           ?? true }
       ];
@@ -99,13 +100,18 @@ export class GenerateCharacterApp extends FormApplication {
   async _updateObject(event, formData) {
     event.preventDefault();
     const html = this.element;
-    const selected = Object.keys(formData)
+    const checked = Object.keys(formData)
       .filter(key => key.endsWith("-step") && formData[key] === true)
       .map(key => key.replace(/-step$/, ""));
 
     html.find('input').prop('disabled', true);
 
-    // visual prep
+    const baseOrder = ["demographics", "attributes", "skills", "skillSpecialties"];
+    const splatSteps = this._buildSplatSections(this.actor).map(section => section.id);
+    const finalOrder = ["merits"];
+    const orderedSteps = [...baseOrder, ...splatSteps, ...finalOrder];
+    const selected = orderedSteps.filter(stepId => checked.includes(stepId));
+    
     const generateBtn = html.find(".generate-btn");
     generateBtn.prop("disabled", true);
     this._queueAll(selected);
@@ -113,6 +119,7 @@ export class GenerateCharacterApp extends FormApplication {
     ui.notifications.info(`Generating: ${selected.join(", ")}`);
 
     let position = 0;
+    console.log("Starting generation with steps:", selected, steps);
     for (const stepName of selected) {
       position++;
       const step = steps[stepName];
@@ -149,7 +156,10 @@ export class GenerateCharacterApp extends FormApplication {
         const args = response?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
         appendage.push({ role:"assistant", content:`Attempt ${attempts} of ${maximumAttempts}: ${args || "No content returned."}` });
 
-        if (!args) continue;
+        if (!args) {
+          appendage.push({ role:"user", content:"No arguments returned from the LLM. Please try again." });
+          continue;
+        }
 
         data = JSON.parse(args);
         const validationErrors = step.validate(this.actor, data);

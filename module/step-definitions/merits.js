@@ -44,7 +44,7 @@ export const meritsStep = {
 
     let powerStatText = '';
     if (hasPowerStat) {
-      powerStatText = `• Optionally, spend 5 dots to increase the character's ${powerStatName} by 1 (you may do this up to ${maxIncrease} times, as total dots are ${totalDots}).`;
+      powerStatText = `• Optionally, spend 5 dots to increase the character's ${powerStatName} by 1 (you may do this up to ${maxIncrease} times, as total dots are ${totalDots}). You may also do this zero times.`;
     }
 
     return `Choose Merits for this Chronicles of Darkness character, totaling exactly ${totalDots} dots.
@@ -255,6 +255,6 @@ ${meritsJson}
     await actor.update(updateData);
   },
   defaultChecked: (actor) => {
-    return (actor.system.inventory?.merit?.items?.length ?? 0) === 0;
+    return (actor?.items?.filter(item => item.type == "merit")?.length ?? 0) === 0;
   }
 };

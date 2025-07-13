@@ -52,6 +52,11 @@ export const checkMeritPrerequisites = (actorData, prereqString) => {
     const werewolf = system.werewolf_traits || {};
     scope.primalUrge = werewolf.primalUrge?.value ?? 0;
     scope.harmony = werewolf.harmony?.value ?? 0;
+    scope.purity = system?.werewolf_renown?.purity?.value ?? 0;
+    scope.cunning = system?.werewolf_renown?.cunning?.value ?? 0;
+    scope.honor = system?.werewolf_renown?.honor?.value ?? 0;
+    scope.glory = system?.werewolf_renown?.glory?.value ?? 0;
+    scope.wisdom = system?.werewolf_renown?.wisdom?.value ?? 0;
 
     // Demon-specific
     scope.primum = system.demon_traits?.primum?.value ?? 0;

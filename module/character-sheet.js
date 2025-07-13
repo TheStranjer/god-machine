@@ -1,6 +1,6 @@
 export const actorToCharacterSheet = (actor) => {
   const sheet = {
-    vitals: {
+    demographics: {
       name: actor.name,
       description: actor.system.description,
       virtue: actor.system.virtue,
@@ -51,6 +51,19 @@ export const actorToCharacterSheet = (actor) => {
     },
     merits: actor.items.filter(item => item.type == "merit").map(merit => ({ name: merit.name, rating: merit.system.rating }))
   };
+
+  if (actor.system.characterType === "Werewolf") {
+    sheet.werewolf_traits = actor.system.werewolf_traits;
+    sheet.werewolf_renown = actor.system.werewolf_renown;
+    sheet.touchstone_flesh = actor.system.touchstone_flesh;
+    sheet.touchstone_spirit = actor.system.touchstone_spirit;
+    sheet.huntersAspect = actor.system.huntersAspect;
+    sheet.auspice = actor.system.auspice;
+    sheet.tribe = actor.system.tribe;
+    sheet.gift_facets = actor.items.filter(item => item.type == "facet").map(facet => ({ name: facet.name, gift: facet?.system?.gift, type: facet?.system?.giftType }));
+    sheet.blood = actor.system.virtue;
+    sheet.bone = actor.system.vice;
+  }
 
   return sheet;
 }
