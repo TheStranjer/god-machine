@@ -1,4 +1,5 @@
-import { checkMeritPrerequisites } from "../check-merit-prerequisites.js";
+import { checkMeritPrerequisites } from "../utils/check-merit-prerequisites.js";
+import { stripHtmlRegex } from '../utils/strip-html-regex.js';
 
 const calculateTotalDots = (splat) => {
   const splatMap = {
@@ -18,11 +19,13 @@ export const meritsStep = {
   maximumAttempts: (actor) => ( 3 ),
   prompt: (actor) => {
     const merits = game.items.filter(item => item.type === "merit");
-    const meritsList = merits.map(merit => ({
+    const eligibleMerits = merits.filter(merit => checkMeritPrerequisites(actor, merit.system.prerequisites));
+    const meritsList = eligibleMerits.map(merit => ({
       id: merit.id,
       name: merit.name,
       possibleRatings: merit.system.possibleRatings,
-      prerequisites: merit.system.prerequisites
+      prerequisites: merit.system.prerequisites,
+      description: stripHtmlRegex(merit.system.description)
     }));
     const meritsJson = JSON.stringify(meritsList);
 
@@ -66,22 +69,13 @@ ${meritsJson}
   },
   tool: (actor) => {
     const merits = game.items.filter(item => item.type === "merit");
+    const eligibleMerits = merits.filter(merit => checkMeritPrerequisites(actor, merit.system.prerequisites));
+    const eligibleMeritIds = eligibleMerits.map(merit => merit.id);
 
     const parsePossibleRatings = (str) => {
       if (!str) return [];
       return str.split(',').map(part => Number(part.trim())).filter(n => !isNaN(n));
     };
-
-    const oneOfSchemas = merits.map(merit => ({
-      type: "object",
-      properties: {
-        meritId: { type: "string", const: merit.id },
-        rating: { type: "integer", enum: parsePossibleRatings(merit.system.possibleRatings) },
-        signifier: { type: "string", minLength: 1, maxLength: 30 }
-      },
-      required: ["meritId", "rating"],
-      additionalProperties: false
-    }));
 
     const splat = actor.system.characterType.toLowerCase();
     const powerStatNameMap = {
@@ -102,7 +96,14 @@ ${meritsJson}
         choices: {
           type: "array",
           items: {
-            oneOf: oneOfSchemas
+            type: "object",
+            properties: {
+              meritId: { type: "string", enum: eligibleMeritIds },
+              rating: { type: "integer", minimum: 1, maximum: 5},
+              signifier: { type: "string", minLength: 1, maxLength: 30 }
+            },
+            required: ["meritId","rating"],
+            additionalProperties: false
           }
         }
       },

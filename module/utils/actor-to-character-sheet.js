@@ -1,3 +1,5 @@
+import { stripHtmlRegex } from './strip-html-regex.js '
+
 export const actorToCharacterSheet = (actor) => {
   const sheet = {
     demographics: {

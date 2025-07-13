@@ -1,6 +1,6 @@
 import { hitLLMEndpoint } from "./llm-interface.js";
 import { steps } from "./steps.js";
-import { actorToCharacterSheet } from "./character-sheet.js";
+import { actorToCharacterSheet } from "./utils/actor-to-character-sheet.js";
 
 export class GenerateCharacterApp extends FormApplication {
   static get defaultOptions() {

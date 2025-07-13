@@ -1,3 +1,5 @@
+import { stripHtmlRegex } from '../utils/strip-html-regex.js';
+
 const shadowByAuspice = {
   "Cahalith": ["Inspiration", "Knowledge"],
   "Elodoth": ["Insight", "Warding"],
@@ -86,7 +88,7 @@ export const giftsStep = {
     const formatList = (facets) => facets.map(facet => ({
       id: facet.id,
       name: facet.name,
-      description: facet.system.description,
+      description: stripHtmlRegex(facet.system.description),
       gift: facet.system.gift,
       giftType: facet.system.giftType,
       cost: facet.system.cost,

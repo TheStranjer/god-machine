@@ -1,3 +1,5 @@
+import { stripHtmlRegex } from '../utils/strip-html-regex.js';
+
 const calculateEligibleRites = () => game.items.filter(item => item.type === 'werewolf_rite' && (item?.system?.level ?? 3) <= 2);
 
 export const ritesStep = {
@@ -8,7 +10,7 @@ export const ritesStep = {
     const formatList = (rites) => eligibleRites.map(rite => ({
       id: rite.id,
       name: rite.name,
-      description: rite.system.description,
+      description: stripHtmlRegex(rite.system.description),
       level: rite.system.level,
       riteType: rite.system.riteType,
       action: rite.system.action
