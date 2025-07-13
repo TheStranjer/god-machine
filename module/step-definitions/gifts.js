@@ -101,7 +101,7 @@ export const giftsStep = {
       ? `• Since the character's Auspice Renown is less than 2, you must also select exactly one Wolf Facet.` 
       : '';
 
-    const prompt = `Select Gifts for this Werewolf: the Forsaken character.
+    let prompt = `Select Gifts for this Werewolf: the Forsaken character.
 
 • Select exactly two Shadow Facets from the eligible list. They must be from different Shadow Gifts.${needsWolf ? "\n• Select exactly one Wolf Facet from the eligible list." : ''}
 • Return an object with:
