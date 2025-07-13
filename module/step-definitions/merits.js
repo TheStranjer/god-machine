@@ -21,7 +21,6 @@ export const meritsStep = {
     const meritsList = merits.map(merit => ({
       id: merit.id,
       name: merit.name,
-      description: merit.system.description,
       possibleRatings: merit.system.possibleRatings,
       prerequisites: merit.system.prerequisites
     }));
