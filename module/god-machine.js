@@ -16,7 +16,7 @@ Hooks.on("getActorDirectoryEntryContext", (html, options) => {
     condition: li => {
       const actorId = li.data("document-id");
       const actor = game.actors.get(actorId);
-      return actor?.type === "character"; // only for characters
+      return actor?.type === "character" && game.user.role >= CONST.USER_ROLES.TRUSTED;
     },
     callback: li => {
       const actorId = li.data("document-id");
