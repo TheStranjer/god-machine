@@ -41,6 +41,7 @@ export const checkMeritPrerequisites = (actorData, prereqString) => {
     // Vampire-specific
     const vampire = system.vampire_traits || {};
     scope.bloodPotency = vampire.bloodPotency?.value ?? 0;
+    scope.blood_potency = scope.bloodPotency; // allow users to use `bloodPotency` and `blood_potency` interchangeably
     scope.humanity = vampire.humanity?.value ?? 0;
 
     // Changeling-specific
@@ -51,6 +52,7 @@ export const checkMeritPrerequisites = (actorData, prereqString) => {
     // Werewolf-specific
     const werewolf = system.werewolf_traits || {};
     scope.primalUrge = werewolf.primalUrge?.value ?? 0;
+    scope.primal_urge = scope.primalUrge; // allow users to use `primalUrge` and `primal_urge` interchangeably
     scope.harmony = werewolf.harmony?.value ?? 0;
     scope.purity = system?.werewolf_renown?.purity?.value ?? 0;
     scope.cunning = system?.werewolf_renown?.cunning?.value ?? 0;
@@ -103,6 +105,8 @@ export const checkMeritPrerequisites = (actorData, prereqString) => {
     scope.merit = merit;
     scope.has_specialty = has_specialty;
 
+    scope.animal_ken = scope.animalKen; // allow the user to use `animalKen` and `animal_ken` interchangeably
+
     scope.splat = actorData.system.characterType;
 
     math.import({
@@ -114,7 +118,7 @@ export const checkMeritPrerequisites = (actorData, prereqString) => {
     const compiled = node.compile();
     return compiled.evaluate(scope);
   } catch (error) {
-    console.error('Prerequisite evaluation error:', error);
+    console.error('Prerequisite evaluation error:', error, actorData, prereqString);
     return false;  // Fail closed on error
   }
 }

@@ -1,6 +1,7 @@
 import { hitLLMEndpoint } from "./llm-interface.js";
 import { steps } from "./steps.js";
 import { actorToCharacterSheet } from "./utils/actor-to-character-sheet.js";
+import { getAvailableXP } from './utils/get-available-xp.js';
 
 export class GenerateCharacterApp extends FormApplication {
   static get defaultOptions() {
@@ -38,11 +39,12 @@ export class GenerateCharacterApp extends FormApplication {
   /* ------------------ UI HELPERS ------------------ */
   _buildBaseSections(actor) {
     return [
-      { id: "demographics",       label: "Demographics",        checked: steps.demographics?.defaultChecked?.(actor) ?? true },
-      { id: "attributes",         label: "Attributes",          checked: steps.attributes?.defaultChecked?.(actor)   ?? true },
-      { id: "skills",             label: "Skills",              checked: steps.skills?.defaultChecked?.(actor)       ?? true },
+      { id: "demographics",       label: "Demographics",        checked: steps.demographics?.defaultChecked?.(actor)     ?? true },
+      { id: "attributes",         label: "Attributes",          checked: steps.attributes?.defaultChecked?.(actor)       ?? true },
+      { id: "skills",             label: "Skills",              checked: steps.skills?.defaultChecked?.(actor)           ?? true },
       { id: "skillSpecialties",   label: "Skill Specialties",   checked: steps.skillSpecialties?.defaultChecked?.(actor) ?? true },
-      { id: "merits",             label: "Merits",              checked: steps.merits?.defaultChecked?.(actor)       ?? true }
+      { id: "merits",             label: "Merits",              checked: steps.merits?.defaultChecked?.(actor)           ?? true },
+      { id: "spendExperience",    label: "Spend Experience",    checked: steps.spendExperienceStep?.(actor)?.defaultChecked?.(actor)  ?? true }
     ];
   }
 
@@ -108,7 +110,7 @@ export class GenerateCharacterApp extends FormApplication {
 
     const baseOrder = ["demographics", "attributes", "skills", "skillSpecialties"];
     const splatSteps = this._buildSplatSections(this.actor).map(section => section.id);
-    const finalOrder = ["merits"];
+    const finalOrder = ["merits", "spendExperience"];
     const orderedSteps = [...baseOrder, ...splatSteps, ...finalOrder];
     const selected = orderedSteps.filter(stepId => checked.includes(stepId));
     
@@ -122,7 +124,7 @@ export class GenerateCharacterApp extends FormApplication {
     console.log("Starting generation with steps:", selected, steps);
     for (const stepName of selected) {
       position++;
-      const step = steps[stepName];
+      const step = (stepName == "spendExperience") ? steps.spendExperienceStep?.(this.actor) : steps[stepName];
       if (!step) {
         ui.notifications.warn(`No step defined for ${stepName}. Skipping.`);
         this._setStatus(stepName, "failed");
@@ -174,8 +176,19 @@ export class GenerateCharacterApp extends FormApplication {
 
       if (success) {
         await step.apply(this.actor, data);
-        this._setStatus(stepName, "done");
-        ui.notifications.info(`Generated ${stepName} after ${attempts} attempt(s).`);
+        if (stepName == "spendExperience") {
+          const availableXP = getAvailableXP(this.actor);
+          if (availableXP > 0) {
+            selected.push("spendExperience");
+            ui.notifications.info(`Spent some experience for ${this.actor.name}. Spending some more.`);
+          } else {
+            this._setStatus(stepName, "done");
+            ui.notifications.info(`Spent all available Experience for ${this.actor.name}. Done.`);
+          }
+        } else {
+          this._setStatus(stepName, "done");
+          ui.notifications.info(`Generated ${stepName} after ${attempts} attempt(s).`);
+        }
       } else {
         this._setStatus(stepName, "failed");
         ui.notifications.error(`Failed ${stepName} after ${maximumAttempts} attempts.`);

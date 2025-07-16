@@ -11,6 +11,8 @@ import { urathaTouchstonesStep } from "./step-definitions/uratha-touchstones.js"
 import { giftsStep } from "./step-definitions/gifts.js";
 import { ritesStep } from "./step-definitions/rites.js";
 
+import { spendWerewolfExperienceStep } from "./step-definitions/spend-experience/werewolf.js";
+
 export const steps = {
   demographics: demographicsStep,
   attributes: attributesStep,
@@ -22,5 +24,12 @@ export const steps = {
   bloodAndBone: bloodAndBoneStep,
   urathaTouchstones: urathaTouchstonesStep,
   gifts: giftsStep,
-  rites: ritesStep
+  rites: ritesStep,
+  spendExperienceStep: (actor) => {
+    switch (actor.system.characterType) {
+      case "Werewolf":
+        return spendWerewolfExperienceStep
+        break;
+    }
+  }
 };
