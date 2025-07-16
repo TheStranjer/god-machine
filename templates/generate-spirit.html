@@ -1,0 +1,35 @@
+<form>
+  <h1>Generating {{characterName}}</h1>
+  <div class="form-group">
+    <div class="row">
+      <label for="rank">Rank:</label>
+      <select name="rank" id="rank">
+        {{#each rankOptions}}
+          {{#if (gt value 0)}}
+            <option value="{{value}}" {{#if (eq value ../currentRank)}}selected{{/if}}>{{label}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </div>
+    <table class="god-machine-generate-character-table">
+      <tr>
+        <td class="god-machine-generate-character-table-col">
+          {{#each sections}}
+            <div class="row step-row" data-step="{{id}}">
+              <div class="col">
+                <label class="checkbox">
+                  <input type="checkbox" name="{{id}}-step" {{#if checked}}checked{{/if}}>
+                  <span class="step-label">{{label}}</span>
+                </label>
+              </div>
+            </div>
+          {{/each}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <footer class="form-footer">
+    <button type="submit" class="generate-btn"><i class="fas fa-robot"></i> Generate</button>
+  </footer>
+</form>

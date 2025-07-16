@@ -1,5 +1,6 @@
 import { registerSystemSettings } from "./settings.js";
 import { GenerateCharacterApp } from "./generate-character-app.js";
+import { GenerateSpiritApp } from "./generate-spirit-app.js";
 
 console.log("Loading god-machine module...");
 
@@ -24,6 +25,22 @@ Hooks.on("getActorDirectoryEntryContext", (html, options) => {
       if (!actor) return;
 
       new GenerateCharacterApp(actor).render(true);
+    }
+  });
+
+  options.push({
+    name: "Generate Spirit",
+    icon: '<i class="fas fa-robot"></i>',
+    condition: li => {
+      const actorId = li.data("document-id");
+      const actor = game.actors.get(actorId);
+      return actor?.type === "ephemeral" && actor?.system?.ephemeralType === "Spirit" && game.user.role >= CONST.USER_ROLES.GAMEMASTER;
+    },
+    callback: li => {
+      const actorId = li.data("document-id");
+      const actor = game.actors.get(actorId);
+      if (!actor) return;
+      new GenerateSpiritApp(actor).render(true);
     }
   });
 });
