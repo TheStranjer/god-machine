@@ -83,7 +83,9 @@ Your character recovers a point of Willpower when he resorts to disgusting or fr
 
     // Append to notes
     const currentNotes = actor.system.notes || "";
-    const appendText = `BLOOD ARCHETYPE
+    const appendText = `
+
+BLOOD ARCHETYPE
 ${data.blood_name} - ${data.blood_description.replace("\\n", "\n")}
 
 BONE ARCHETYPE
