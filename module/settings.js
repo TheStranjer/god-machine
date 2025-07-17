@@ -15,7 +15,7 @@ export const registerSystemSettings = () => {
     scope: "client",
     config: true,
     type: String,
-    default: "gpt-4o",
+    default: "grok-3-mini",
     requiresReload: false
   });
 
@@ -25,7 +25,7 @@ export const registerSystemSettings = () => {
     scope: "client",
     config: true,
     type: String,
-    default: "https://api.openai.com/v1/chat/completions",
+    default: "https://api.x.ai/v1/chat/completions",
     requiresReload: false
   });
 };
