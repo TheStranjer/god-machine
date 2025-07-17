@@ -1,7 +1,7 @@
 import { hitLLMEndpoint } from "./llm-interface.js";
 import { steps } from "./steps.js";
 import { actorToCharacterSheet } from "./utils/actor-to-character-sheet.js";
-import { getAvailableXP } from './utils/get-available-xp.js';
+import { getAvailableXP, getAvailableArcaneXP } from './utils/get-available-xp.js';
 
 export class GenerateCharacterApp extends FormApplication {
   static get defaultOptions() {
@@ -39,11 +39,11 @@ export class GenerateCharacterApp extends FormApplication {
   /* ------------------ UI HELPERS ------------------ */
   _buildBaseSections(actor) {
     return [
-      { id: "demographics",       label: "Demographics",        checked: steps.demographics?.defaultChecked?.(actor)     ?? true },
-      { id: "attributes",         label: "Attributes",          checked: steps.attributes?.defaultChecked?.(actor)       ?? true },
-      { id: "skills",             label: "Skills",              checked: steps.skills?.defaultChecked?.(actor)           ?? true },
-      { id: "skillSpecialties",   label: "Skill Specialties",   checked: steps.skillSpecialties?.defaultChecked?.(actor) ?? true },
-      { id: "merits",             label: "Merits",              checked: steps.merits?.defaultChecked?.(actor)           ?? true },
+      { id: "demographics",       label: "Demographics",        checked: steps.demographics?.defaultChecked?.(actor)      ?? true },
+      { id: "attributes",         label: "Attributes",          checked: steps.attributes?.defaultChecked?.(actor)        ?? true },
+      { id: "skills",             label: "Skills",              checked: steps.skills?.defaultChecked?.(actor)            ?? true },
+      { id: "skillSpecialties",   label: "Skill Specialties",   checked: steps.skillSpecialties?.defaultChecked?.(actor)  ?? true },
+      { id: "merits",             label: "Merits",              checked: steps.merits?.defaultChecked?.(actor)            ?? true },
       { id: "spendExperience",    label: "Spend Experience",    checked: steps.spendExperienceStep?.(actor)?.defaultChecked?.(actor)  ?? true }
     ];
   }
@@ -52,32 +52,33 @@ export class GenerateCharacterApp extends FormApplication {
     const splat = actor?.system?.characterType || "";
     switch (splat) {
       case "Werewolf": return [
-        { id: "auspiceAndTribe",   label: "Auspice & Tribe",    checked: steps.auspiceAndTribe?.defaultChecked?.(actor)   ?? true },
-        { id: "renown",            label: "Renown",             checked: steps.renown?.defaultChecked?.(actor)            ?? true },
-        { id: "bloodAndBone",      label: "Blood & Bone",       checked: steps.bloodAndBone?.defaultChecked?.(actor)      ?? true },
-        { id: "urathaTouchstones", label: "Touchstones",        checked: steps.urathaTouchstones?.defaultChecked?.(actor) ?? true },
-        { id: "gifts",             label: "Gifts",              checked: steps.gifts?.defaultChecked?.(actor)             ?? true },
-        { id: "rites",             label: "Rites",              checked: steps.rites?.defaultChecked?.(actor)             ?? true }
+        { id: "auspiceAndTribe",        label: "Auspice & Tribe",        checked: steps.auspiceAndTribe?.defaultChecked?.(actor)    ?? true },
+        { id: "renown",                 label: "Renown",                 checked: steps.renown?.defaultChecked?.(actor)             ?? true },
+        { id: "bloodAndBone",           label: "Blood & Bone",           checked: steps.bloodAndBone?.defaultChecked?.(actor)       ?? true },
+        { id: "urathaTouchstones",      label: "Touchstones",            checked: steps.urathaTouchstones?.defaultChecked?.(actor)  ?? true },
+        { id: "gifts",                  label: "Gifts",                  checked: steps.gifts?.defaultChecked?.(actor)              ?? true },
+        { id: "rites",                  label: "Rites",                  checked: steps.rites?.defaultChecked?.(actor)              ?? true }
       ];
       case "Vampire": return [
-        { id: "masks_and_dirges",  label: "Masks & Dirges",     checked: steps.masksAndDirges?.defaultChecked?.(actor)    ?? true },
-        { id: "kindred_touchstone",label: "Touchstone",         checked: steps.kindredTouchstone?.defaultChecked?.(actor)  ?? true },
-        { id: "disciplines",       label: "Disciplines",        checked: steps.disciplines?.defaultChecked?.(actor)         ?? true }
+        { id: "masks_and_dirges",       label: "Masks & Dirges",         checked: steps.masksAndDirges?.defaultChecked?.(actor)     ?? true },
+        { id: "kindred_touchstone",     label: "Touchstone",             checked: steps.kindredTouchstone?.defaultChecked?.(actor)  ?? true },
+        { id: "disciplines",            label: "Disciplines",            checked: steps.disciplines?.defaultChecked?.(actor)        ?? true }
       ];
       case "Mage": return [
-        { id: "nimbus",            label: "Nimbus",             checked: steps.nimbus?.defaultChecked?.(actor)              ?? true },
-        { id: "dedicated_magical_tool", label: "Dedicated Magical Tool", checked: steps.dedicatedMagicalTool?.defaultChecked?.(actor) ?? true },
-        { id: "arcana",            label: "Arcana",             checked: steps.arcana?.defaultChecked?.(actor)              ?? true },
-        { id: "rotes",             label: "Rotes",              checked: steps.rotes?.defaultChecked?.(actor)               ?? true },
-        { id: "obsessions",        label: "Obsessions",         checked: steps.obsessions?.defaultChecked?.(actor)          ?? true },
-        { id: "praxes",            label: "Praxes",             checked: steps.praxes?.defaultChecked?.(actor)              ?? true },
-        { id: "resistance_attribute", label: "Resistance Attribute", checked: steps.resistanceAttribute?.defaultChecked?.(actor) ?? true }
+        { id: "pathAndOrder",           label: "Path & Order",           checked: steps.pathAndOrder?.defaultChecked?.(actor)         ?? true},
+        { id: "nimbus",                 label: "Nimbus",                 checked: steps.nimbus?.defaultChecked?.(actor)               ?? true},
+        { id: "dedicatedMagicalTool",   label: "Dedicated Magical Tool", checked: steps.dedicatedMagicalTool?.defaultChecked?.(actor) ?? true},
+        { id: "arcana",                 label: "Arcana",                 checked: steps.arcana?.defaultChecked?.(actor)               ?? true},
+        { id: "rotes",                  label: "Rotes",                  checked: steps.rotes?.defaultChecked?.(actor)                ?? true},
+        { id: "obsessions",             label: "Obsessions",             checked: steps.obsessions?.defaultChecked?.(actor)           ?? true},
+        { id: "praxes",                 label: "Praxes",                 checked: steps.praxes?.defaultChecked?.(actor)               ?? true},
+        { id: "resistanceAttribute",    label: "Resistance Attribute",   checked: steps.resistanceAttribute?.defaultChecked?.(actor)  ?? true}
       ];
       case "Changeling": return [
-        { id: "mien",              label: "Mien",               checked: steps.mien?.defaultChecked?.(actor)                ?? true },
-        { id: "needle_and_thread", label: "Needle & Thread",    checked: steps.needleAndThread?.defaultChecked?.(actor)   ?? true },
-        { id: "touchstone",        label: "Touchstone",         checked: steps.touchstone?.defaultChecked?.(actor)          ?? true },
-        { id: "contracts",         label: "Contracts",          checked: steps.contracts?.defaultChecked?.(actor)           ?? true }
+        { id: "mien",                   label: "Mien",                   checked: steps.mien?.defaultChecked?.(actor)               ?? true },
+        { id: "needle_and_thread",      label: "Needle & Thread",        checked: steps.needleAndThread?.defaultChecked?.(actor)    ?? true },
+        { id: "touchstone",             label: "Touchstone",             checked: steps.touchstone?.defaultChecked?.(actor)         ?? true },
+        { id: "contracts",              label: "Contracts",              checked: steps.contracts?.defaultChecked?.(actor)          ?? true }
       ];
       default: return [];
     }
@@ -125,6 +126,7 @@ export class GenerateCharacterApp extends FormApplication {
     for (const stepName of selected) {
       position++;
       const step = (stepName == "spendExperience") ? steps.spendExperienceStep?.(this.actor) : steps[stepName];
+      console.log("Current step", step);
       if (!step) {
         ui.notifications.warn(`No step defined for ${stepName}. Skipping.`);
         this._setStatus(stepName, "failed");
@@ -178,7 +180,8 @@ export class GenerateCharacterApp extends FormApplication {
         await step.apply(this.actor, data);
         if (stepName == "spendExperience") {
           const availableXP = getAvailableXP(this.actor);
-          if (availableXP > 0) {
+          const availableArcaneXP = getAvailableArcaneXP(this.actor);
+          if (availableXP > 0 || availableArcaneXP > 0) {
             selected.push("spendExperience");
             ui.notifications.info(`Spent some experience for ${this.actor.name}. Spending some more.`);
           } else {

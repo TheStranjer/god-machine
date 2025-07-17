@@ -54,6 +54,15 @@ export const actorToCharacterSheet = (actor) => {
     merits: actor.items.filter(item => item.type == "merit").map(merit => ({ name: merit.name, rating: merit.system.rating }))
   };
 
+  sheet.equipment = actor.items.filter(item => item.type == "equipment").map(equipment => ({
+    name: equipment.name,
+    dicePool: equipment.dicePool,
+    effects: equipment.effects,
+    isMagical: equipment.isMagical,
+    structure: equipment.structure,
+    description: equipment.description
+  }));
+
   if (actor.system.characterType === "Werewolf") {
     sheet.werewolf_traits = actor.system.werewolf_traits;
     sheet.werewolf_renown = actor.system.werewolf_renown;
@@ -65,6 +74,17 @@ export const actorToCharacterSheet = (actor) => {
     sheet.gift_facets = actor.items.filter(item => item.type == "facet").map(facet => ({ name: facet.name, gift: facet?.system?.gift, type: facet?.system?.giftType }));
     sheet.blood = actor.system.virtue;
     sheet.bone = actor.system.vice;
+  }
+
+  if (actor.system.characterType === "Mage") {
+    sheet.mage_traits = actor.system.mage_traits;
+    sheet.nimbus = actor.system.nimbus;
+    sheet.obsessions = actor.system.obsessions;
+    sheet.spells = actor.items.filter(item => item.type == "spell");
+    sheet.arcana_gross = actor.system.arcana_gross;
+    sheet.arcana_subtle = actor.system.arcana_subtle;
+    sheet.path = actor.system.path;
+    sheet.order = actor.system.order;
   }
 
   return sheet;
