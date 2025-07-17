@@ -1,6 +1,7 @@
 import { registerSystemSettings } from "./settings.js";
 import { GenerateCharacterApp } from "./generator-apps/character.js";
 import { GenerateSpiritApp } from "./generator-apps/spirit.js";
+import { isApiKeySet } from './utils/is-api-key-set.js';
 
 console.log("Loading god-machine module...");
 
@@ -11,13 +12,14 @@ Hooks.once("init", () => {
 });
 
 Hooks.on("getActorDirectoryEntryContext", (html, options) => {
+  
   options.push({
     name: "Generate Character",
     icon: '<i class="fas fa-robot"></i>', // you can change the icon
     condition: li => {
       const actorId = li.data("document-id");
       const actor = game.actors.get(actorId);
-      return actor?.type === "character" && game.user.role >= CONST.USER_ROLES.TRUSTED;
+      return isApiKeySet() && actor?.type === "character" && game.user.role >= CONST.USER_ROLES.TRUSTED;
     },
     callback: li => {
       const actorId = li.data("document-id");
@@ -34,7 +36,7 @@ Hooks.on("getActorDirectoryEntryContext", (html, options) => {
     condition: li => {
       const actorId = li.data("document-id");
       const actor = game.actors.get(actorId);
-      return actor?.type === "ephemeral" && actor?.system?.ephemeralType === "Spirit" && game.user.role >= CONST.USER_ROLES.GAMEMASTER;
+      return isApiKeySet() && actor?.type === "ephemeral" && actor?.system?.ephemeralType === "Spirit" && game.user.role >= CONST.USER_ROLES.GAMEMASTER;
     },
     callback: li => {
       const actorId = li.data("document-id");
