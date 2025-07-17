@@ -1,7 +1,7 @@
-import { hitLLMEndpoint } from "./llm-interface.js";
-import { steps } from "./steps.js";
-import { actorToCharacterSheet } from "./utils/actor-to-character-sheet.js";
-import { getAvailableXP, getAvailableArcaneXP } from './utils/get-available-xp.js';
+import { hitLLMEndpoint } from "../llm-interface.js";
+import { steps } from "../steps.js";
+import { actorToCharacterSheet } from "../utils/actor-to-character-sheet.js";
+import { getAvailableXP, getAvailableArcaneXP } from '../utils/get-available-xp.js';
 
 export class GenerateCharacterApp extends FormApplication {
   static get defaultOptions() {

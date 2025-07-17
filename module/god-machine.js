@@ -1,6 +1,6 @@
 import { registerSystemSettings } from "./settings.js";
-import { GenerateCharacterApp } from "./generate-character-app.js";
-import { GenerateSpiritApp } from "./generate-spirit-app.js";
+import { GenerateCharacterApp } from "./generator-apps/character.js";
+import { GenerateSpiritApp } from "./generator-apps/spirit.js";
 
 console.log("Loading god-machine module...");
 

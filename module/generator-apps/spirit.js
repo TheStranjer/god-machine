@@ -1,6 +1,6 @@
-import { hitLLMEndpoint } from "./llm-interface.js";
-import { generateSpiritStep, rankTable } from "./step-definitions/generate-spirit.js";
-import { actorToSpiritSheet } from "./utils/actor-to-spirit-sheet.js";
+import { hitLLMEndpoint } from "../llm-interface.js";
+import { generateSpiritStep, rankTable } from "../step-definitions/generate-spirit.js";
+import { actorToSpiritSheet } from "../utils/actor-to-spirit-sheet.js";
 
 export class GenerateSpiritApp extends FormApplication {
   static get defaultOptions() {
