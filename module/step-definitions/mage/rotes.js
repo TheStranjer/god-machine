@@ -1,4 +1,4 @@
-import { stripHtmlRegex } from '../utils/strip-html-regex.js';
+import { stripHtmlRegex } from '../../utils/strip-html-regex.js';
 
 const eligibleSpells = (actor) => {
   const gross = actor.system.arcana_gross || {};

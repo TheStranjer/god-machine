@@ -1,4 +1,4 @@
-import { stripHtmlRegex } from '../utils/strip-html-regex.js';
+import { stripHtmlRegex } from '../../utils/strip-html-regex.js';
 
 const calculateEligibleRites = () => game.items.filter(item => item.type === 'werewolf_rite' && (item?.system?.level ?? 3) <= 2);
 

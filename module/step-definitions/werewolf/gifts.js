@@ -1,4 +1,4 @@
-import { stripHtmlRegex } from '../utils/strip-html-regex.js';
+import { stripHtmlRegex } from '../../utils/strip-html-regex.js';
 
 const shadowByAuspice = {
   "Cahalith": ["Inspiration", "Knowledge"],

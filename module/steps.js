@@ -1,26 +1,25 @@
-
 import { demographicsStep } from "./step-definitions/demographics.js";
 import { attributesStep } from "./step-definitions/attributes.js";
 import { skillsStep } from "./step-definitions/skills.js";
 import { skillSpecialtiesStep } from "./step-definitions/skill-specialties.js";
 import { meritsStep } from "./step-definitions/merits.js";
-import { auspiceAndTribeStep } from "./step-definitions/auspice-and-tribe.js";
-import { renownStep } from "./step-definitions/renown.js";
-import { bloodAndBoneStep } from "./step-definitions/blood-and-bone.js";
-import { urathaTouchstonesStep } from "./step-definitions/uratha-touchstones.js";
-import { giftsStep } from "./step-definitions/gifts.js";
-import { ritesStep } from "./step-definitions/rites.js";
-import { pathAndOrderStep } from "./step-definitions/path-and-order.js";
-import { dedicatedMagicalToolStep } from "./step-definitions/dedicated-magical-tool.js";
-import { nimbusStep } from "./step-definitions/nimbus.js";
-import { arcanaStep } from "./step-definitions/arcana.js";
-import { rotesStep } from "./step-definitions/rotes.js";
-import { obsessionsStep } from "./step-definitions/obsessions.js";
-import { praxesStep } from "./step-definitions/praxes.js";
-import { resistanceAttributeStep } from "./step-definitions/resistance-attribute.js";
+import { auspiceAndTribeStep } from "./step-definitions/werewolf/auspice-and-tribe.js";
+import { renownStep } from "./step-definitions/werewolf/renown.js";
+import { bloodAndBoneStep } from "./step-definitions/werewolf/blood-and-bone.js";
+import { urathaTouchstonesStep } from "./step-definitions/werewolf/uratha-touchstones.js";
+import { giftsStep } from "./step-definitions/werewolf/gifts.js";
+import { ritesStep } from "./step-definitions/werewolf/rites.js";
+import { pathAndOrderStep } from "./step-definitions/mage/path-and-order.js";
+import { dedicatedMagicalToolStep } from "./step-definitions/mage/dedicated-magical-tool.js";
+import { nimbusStep } from "./step-definitions/mage/nimbus.js";
+import { arcanaStep } from "./step-definitions/mage/arcana.js";
+import { rotesStep } from "./step-definitions/mage/rotes.js";
+import { obsessionsStep } from "./step-definitions/mage/obsessions.js";
+import { praxesStep } from "./step-definitions/mage/praxes.js";
+import { resistanceAttributeStep } from "./step-definitions/mage/resistance-attribute.js";
 
-import { spendWerewolfExperienceStep } from "./step-definitions/spend-experience/werewolf.js";
-import { spendMageExperienceStep } from "./step-definitions/spend-experience/mage.js";
+import { spendWerewolfExperienceStep } from "./step-definitions/werewolf/spend-experience.js";
+import { spendMageExperienceStep } from "./step-definitions/mage/spend-experience.js";
 
 export const steps = {
   demographics: demographicsStep,
